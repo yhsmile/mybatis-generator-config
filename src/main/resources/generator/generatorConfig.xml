@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2014 abel533@gmail.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!-- 根节点 generatorConfiguration 节点没有任何属性，直接写节点即可 -->
+<generatorConfiguration>
+
+  <!-- properties 这个元素用来指定外部的属性元素，不是必须的元素。 -->
+  <properties resource="jdbc.properties"/>
+  
+  <!-- 通过这个属性指定驱动的路径 -->
+  <classPathEntry location="${jdbc.driverLocation}"/>
+  
+    
+  <context id="Oracle" targetRuntime="MyBatis3" defaultModelType="flat">
+  
+    <property name="beginningDelimiter" value="`"/>
+    <property name="endingDelimiter" value="`"/>
+    
+    <!-- 注释信息配置 -->
+    <commentGenerator type="org.mybatis.generator.internal.CustomCommentGenerator">
+	</commentGenerator>
+    
+    
+	<!-- 
+		这段是数据库配置信息，由于需要连接数据库，需要保证项目的classpath下面有数据库的JDBC驱动。
+		如果JDBC驱动不在 classpath 下，就需要通过<classPathEntry>元素引入jar包
+	 -->
+    <jdbcConnection driverClass="${jdbc.driverClass}"
+                    connectionURL="${jdbc.url}"
+                    userId="${jdbc.username}"
+                    password="${jdbc.password}">
+        <!-- 数据库字段注释导出 -->
+    	<property name="remarksReporting" value="true"></property>
+    </jdbcConnection>
+
+	<!-- 
+		配置是生成实体类的配置，是一个必须配置的内容。
+	 -->
+    <javaModelGenerator targetPackage="${targetModelPackage}" targetProject="${targetJavaProject}">
+    
+    	<!-- 该属性只对 MyBatis3 有效，如果 true 就会使用构造方法入参，如果 false 就会使用 setter 方式。默认为false -->
+    	<property name="constructorBased" value="false"/>
+    	
+    	<!-- 如果true，MBG会根据catalog和schema来生成子包。如果false就会直接用targetPackage属性。默认为false。 -->
+    	<property name="enableSubPackages" value="false"/>
+    	
+    	<!-- 
+    		是否对数据库查询结果进行trim操作，如果设置为true就会生成类似这样 
+    		public void setUsername(String username) {this.username = username == null ? null : username.trim();}的setter方法。默认值为false。 
+    	-->
+    	<property name="trimStrings" value="false"/>
+    	
+    </javaModelGenerator>
+
+	<!-- 
+		sqlMapGenerator是一个可选的配置，配置后可以生成Mapper接口对应的XML文件。
+	 -->
+    <sqlMapGenerator targetPackage="${targetXMLPackage}"  targetProject="${targetResourcesProject}"/>
+    
+	<!-- 
+		通用Mapper接口的配置，配置javaClientGenerator后会生成对应的接口文件。
+	 -->
+    <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="XMLMAPPER" />
+	<!-- 
+		table,这里使用SQL通配符%来匹配所有表。generatedKey意味着所有的表都有一个id自增的主键，
+		在生成实体类的时候会根据该配置生成相应的注解。 
+	-->
+	
+
+	
+<!-- <table tableName="TABLE_NAME" domainObjectName="ObjectName" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+      <generatedKey column="ID" sqlStatement="SELECT SEQUENCE(1) FROM DUAL" identity="false"/>
+    </table>  --> 
+
+	<!-- <table tableName="TABLE_NAME" domainObjectName="ObjectName" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table> -->
+  </context>
+</generatorConfiguration>
