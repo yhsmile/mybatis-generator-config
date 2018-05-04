@@ -60,6 +60,22 @@
     </jdbcConnection>
 
 	<!-- 
+		这个元素的配置用来指定JDBC类型和Java类型如何转换。
+		该元素提供了一个可选的属性type，和<commentGenerator>比较类型，提供了默认的实现DEFAULT，一般情况下使用默认即可，需要特殊处理的情况可以通过其他元素配置来解决，不建议修改该属性。
+		该属性还有一个可以配置的<property>元素。
+		可以配置的属性为forceBigDecimals，该属性可以控制是否强制DECIMAL和NUMERIC类型的字段转换为Java类型的java.math.BigDecimal,默认值为false，一般不需要配置。
+		默认情况下的转换规则为：
+		如果精度>0或者长度>18，就会使用java.math.BigDecimal
+		如果精度=0并且10<=长度<=18，就会使用java.lang.Long
+		如果精度=0并且5<=长度<=9，就会使用java.lang.Integer
+		如果精度=0并且长度<5，就会使用java.lang.Short
+		如果设置为true，那么一定会使用java.math.BigDecimal，配置示例如下：
+	 -->
+	<javaTypeResolver>
+		<property name="forceBigDecimals" value="true" />
+	</javaTypeResolver>
+	
+	<!-- 
 		配置是生成实体类的配置，是一个必须配置的内容。
 	 -->
     <javaModelGenerator targetPackage="${targetModelPackage}" targetProject="${targetJavaProject}">
